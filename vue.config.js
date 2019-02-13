@@ -13,6 +13,9 @@ module.exports = {
           icon: 'build/icon.png',
           darkModeSupport: true,
         },
+        win: {
+          icon: 'build/icon.png',
+        },
       },
     },
   },

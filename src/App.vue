@@ -7,10 +7,43 @@
 <style>
 @font-face {
   font-family: "B612 Mono";
+  font-style: italic;
+  font-weight: 400;
+  src: local("B612 Mono Italic"), local("B612Mono-Italic"),
+    url("./assets/fonts/B612Mono-Italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "B612 Mono";
+  font-style: italic;
+  font-weight: 700;
+  src: local("B612 Mono Bold Italic"), local("B612Mono-BoldItalic"),
+    url("./assets/fonts/B612Mono-BoldItalic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "B612 Mono";
   font-style: normal;
   font-weight: 400;
   src: local("B612 Mono Regular"), local("B612Mono-Regular"),
-    url("./assets/fonts/B612_Mono.woff2") format("woff2");
+    url("./assets/fonts/B612Mono-Regular.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "B612 Mono";
+  font-style: normal;
+  font-weight: 700;
+  src: local("B612 Mono Bold"), local("B612Mono-Bold"),
+    url("./assets/fonts/B612Mono-Bold.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
     U+FEFF, U+FFFD;
@@ -26,6 +59,26 @@
 
 ::selection {
   background-color: var(--secondary);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-border-radius: 100px;
+}
+
+::-webkit-scrollbar:hover {
+  background-color: rgba(0, 0, 0, 0.09);
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+  background: rgba(0, 0, 0, 0.61);
+  -webkit-border-radius: 100px;
 }
 
 html,
