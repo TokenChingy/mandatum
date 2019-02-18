@@ -32,6 +32,30 @@
             <input type="text" :value="getUserName" v-on:blur="changeUserName($event)">
           </div>
         </div>
+        <div v-show="this.currentTello === ''" class="row">
+          <div class="column _25">
+            <label>Select Tello</label>
+          </div>
+          <div v-if="this.telloWifi.length === 0" class="column _75">
+            <span style="margin-left: 0.5rem;">No Tello's found.</span>
+          </div>
+          <div v-if="this.telloWifi.length > 0" class="column _25">
+            <select id="tellos" v-for="(network, index) in telloWifi" :key="index">
+              <option>{{network.ssid}}</option>
+            </select>
+          </div>
+          <div v-if="this.telloWifi.length > 0" class="column _50">
+            <input @click="connectToTello()" type="button" value="Connect">
+          </div>
+        </div>
+        <div v-show="this.currentTello !== ''" class="row">
+          <div class="column _25">
+            <label>Selected Tello</label>
+          </div>
+          <div class="column _75">
+            <span style="margin-left: 0.5rem;">{{currentTello}}</span>
+          </div>
+        </div>
 
         <!-- Theme Colours -->
         <div class="row">
@@ -139,8 +163,11 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { setInterval } from "timers";
 import Dgram from "dgram";
 import Jmuxer from "jmuxer";
+import Wifi from "node-wifi";
+import _ from "lodash";
 
 export default {
   name: "workspace",
@@ -161,6 +188,21 @@ export default {
         document.documentElement.style.setProperty(prop, `#${colour}`);
       }
     },
+    connectToTello: function() {
+      const selectedTello = document.querySelector("#tellos").value;
+
+      Wifi.connect(
+        {
+          ssid: selectedTello,
+          password: ""
+        },
+        error => {
+          if (error) throw Error;
+
+          this.currentTello = selectedTello;
+        }
+      );
+    },
     toggleTab: function(tabName) {
       this.localState.activeTab = tabName;
     }
@@ -174,10 +216,36 @@ export default {
         reuseAddr: true
       }).bind(11111),
       telloStreamChunks: [],
-      telloStreamChunkCount: 0
+      telloStreamChunkCount: 0,
+      telloWifi: [],
+      currentTello: ""
     };
   },
   mounted: function() {
+    Wifi.init({
+      iface: null
+    });
+
+    setInterval(() => {
+      Wifi.scan((error, networks) => {
+        if (error) throw Error;
+
+        const telloNetworks = [];
+
+        _.forEach(networks, network => {
+          if (_.includes(network.ssid, "TELLO")) {
+            telloNetworks.push(network);
+          }
+        });
+
+        if (telloNetworks.length > 0) {
+          this.telloWifi = telloNetworks;
+        } else {
+          this.currentTello = "";
+        }
+      });
+    }, 1000);
+
     const videoPlayer = document.querySelector("#player");
 
     videoPlayer.addEventListener("click", event => {
@@ -268,6 +336,23 @@ export default {
 ._content ._settings input:focus {
   background-color: var(--light);
   caret-color: var(--secondary);
+}
+
+._content ._settings select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  flex: 2;
+  width: 100%;
+  margin: 0 0 0 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: none;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  font-size: 1rem;
+  background-color: var(--mid);
+  color: var(--primary);
 }
 
 ._content ._settings .row {

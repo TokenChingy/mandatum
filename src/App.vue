@@ -97,7 +97,8 @@ mark {
   background-color: var(--primary);
 }
 
-input {
+input,
+select {
   font-family: "B612 Mono", Courier, monospace;
 }
 
