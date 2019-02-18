@@ -14,7 +14,12 @@
     </div>
 
     <div v-show="localState.activeTab === 'stream'" class="row _content">
-      <video id="player" autoplay="true"></video>
+      <video v-show="telloStreamChunkCount > 0" id="player" autoplay="true"></video>
+      <div v-show="telloStreamChunkCount === 0" style="position: relative; width: 100%;">
+        <span class="center-center">
+          <mark>Tello's stream is currently off.</mark>
+        </span>
+      </div>
     </div>
 
     <div v-show="localState.activeTab === 'settings'" class="row _content">
@@ -34,7 +39,7 @@
         </div>
         <div v-show="this.currentTello === ''" class="row">
           <div class="column _25">
-            <label>Select Tello</label>
+            <label>Connect Tello</label>
           </div>
           <div v-if="this.telloWifi.length === 0" class="column _75">
             <span style="margin-left: 0.5rem;">No Tello's found.</span>
@@ -50,7 +55,7 @@
         </div>
         <div v-show="this.currentTello !== ''" class="row">
           <div class="column _25">
-            <label>Selected Tello</label>
+            <label>Connected Tello</label>
           </div>
           <div class="column _75">
             <span style="margin-left: 0.5rem;">{{currentTello}}</span>
@@ -197,8 +202,7 @@ export default {
           password: ""
         },
         error => {
-          if (error) throw Error;
-
+          if (error) console.log(error);
           this.currentTello = selectedTello;
         }
       );
@@ -231,18 +235,26 @@ export default {
         if (error) throw Error;
 
         const telloNetworks = [];
+        let isTelloStillConnected = false;
 
         _.forEach(networks, network => {
           if (_.includes(network.ssid, "TELLO")) {
             telloNetworks.push(network);
           }
+
+          if (this.currentTello !== "") {
+            if (network.ssid === this.currentTello)
+              isTelloStillConnected = true;
+          }
         });
 
-        if (telloNetworks.length > 0) {
-          this.telloWifi = telloNetworks;
-        } else {
+        if (telloNetworks.length < 0) {
           this.currentTello = "";
         }
+
+        if (!isTelloStillConnected) this.currentTello = "";
+
+        this.telloWifi = telloNetworks;
       });
     }, 1000);
 
