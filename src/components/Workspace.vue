@@ -14,12 +14,7 @@
     </div>
 
     <div v-show="localState.activeTab === 'stream'" class="row _content">
-      <video v-show="telloStreamChunkCount > 0" id="player" autoplay="true"></video>
-      <div v-show="telloStreamChunkCount === 0" style="position: relative; width: 100%;">
-        <span class="center-center">
-          <mark>Tello's stream is currently off.</mark>
-        </span>
-      </div>
+      <video id="player" autoplay="true"></video>
     </div>
 
     <div v-show="localState.activeTab === 'settings'" class="row _content">

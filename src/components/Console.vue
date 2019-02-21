@@ -20,6 +20,11 @@
 import { mapGetters } from "vuex";
 import Dgram from "dgram";
 
+function constructRCCommand(rc) {
+  const command = `rc ${rc[0]} ${rc[1]} ${rc[2]} ${rc[3]}`;
+  return [command, command.length];
+}
+
 export default {
   name: "console",
   computed: {
@@ -40,6 +45,77 @@ export default {
   },
   mounted: function() {
     const commandPrompt = document.querySelector("._command ._prompt input");
+
+    Controller.search();
+
+    window.addEventListener("gc.controller.found", found => {
+      const rc = [0, 0, 0, 0];
+
+      window.addEventListener("gc.analog.hold", event => {
+        const stick = event.detail;
+
+        switch (stick.name) {
+          case "LEFT_ANALOG_STICK":
+            rc[0] = Math.floor(stick.position.x * 100);
+            rc[1] = Math.floor(stick.position.y * 100) * -1;
+            break;
+          case "RIGHT_ANALOG_STICK":
+            rc[2] = Math.floor(stick.position.y * 100) * -1;
+            rc[3] = Math.floor(stick.position.x * 100);
+            break;
+          default:
+            break;
+        }
+
+        let command = constructRCCommand(rc);
+
+        this.telloSocket.send(
+          command[0],
+          0,
+          command[1],
+          8889,
+          "192.168.10.1",
+          error => {
+            if (error) throw error;
+          }
+        );
+      });
+
+      window.addEventListener("gc.analog.end", event => {
+        const stick = event.detail;
+
+        switch (stick.name) {
+          case "LEFT_ANALOG_STICK":
+            rc[0] = Math.floor(stick.position.x * 100);
+            rc[1] = Math.floor(stick.position.y * 100);
+            break;
+          case "RIGHT_ANALOG_STICK":
+            rc[2] = Math.floor(stick.position.y * 100);
+            rc[3] = Math.floor(stick.position.x * 100);
+            break;
+          default:
+            break;
+        }
+
+        let command = constructRCCommand(rc);
+
+        this.telloSocket.send(
+          command[0],
+          0,
+          command[1],
+          8889,
+          "192.168.10.1",
+          error => {
+            if (error) throw error;
+          }
+        );
+      });
+
+      window.addEventListener("gc.button.press", event => {
+        const button = event.detail;
+        console.log(button);
+      });
+    });
 
     commandPrompt.addEventListener("keyup", event => {
       switch (event.keyCode) {
