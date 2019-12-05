@@ -1,5 +1,3 @@
-
-
 import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 

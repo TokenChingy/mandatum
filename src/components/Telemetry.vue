@@ -5,11 +5,11 @@
     </div>
     <div class="row _data">
       <div class="row _datum" v-for="(state, property) in telloState" :key="property">
-        <div class="column left _50" :title="toStartCase(state.humanName)">{{property}}</div>
+        <div class="column left _50" :title="toStartCase(state.humanName)">{{ property }}</div>
         <div class="column right _25">
-          <mark>{{state.value || 'null'}}</mark>
+          <mark>{{ state.value || "null" }}</mark>
         </div>
-        <div class="column right _25">{{state.unit}}</div>
+        <div class="column right _25">{{ state.unit }}</div>
       </div>
     </div>
   </div>

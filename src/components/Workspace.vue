@@ -3,14 +3,18 @@
     <div class="row _menu">
       <div
         class="column _link"
-        :class="{ 'active' : localState.activeTab === 'stream'}"
+        :class="{ active: localState.activeTab === 'stream' }"
         @click="toggleTab('stream')"
-      >Stream</div>
+      >
+        Stream
+      </div>
       <div
         class="column _link"
-        :class="{ 'active' : localState.activeTab === 'settings'}"
+        :class="{ active: localState.activeTab === 'settings' }"
         @click="toggleTab('settings')"
-      >Settings</div>
+      >
+        Settings
+      </div>
     </div>
 
     <div v-show="localState.activeTab === 'stream'" class="row _content">
@@ -22,14 +26,14 @@
         <!-- Preferences -->
         <div class="row">
           <mark>Preferences</mark>
-          <br>
+          <br />
         </div>
         <div class="row">
           <div class="column _25">
             <label>Username</label>
           </div>
           <div class="column _75">
-            <input type="text" :value="getUserName" v-on:blur="changeUserName($event)">
+            <input type="text" :value="getUserName" v-on:blur="changeUserName($event)" />
           </div>
         </div>
         <div v-show="this.currentTello === ''" class="row">
@@ -41,11 +45,11 @@
           </div>
           <div v-if="this.telloWifi.length > 0" class="column _25">
             <select id="tellos" v-for="(network, index) in telloWifi" :key="index">
-              <option>{{network.ssid}}</option>
+              <option>{{ network.ssid }}</option>
             </select>
           </div>
           <div v-if="this.telloWifi.length > 0" class="column _50">
-            <input @click="connectToTello()" type="button" value="Connect">
+            <input @click="connectToTello()" type="button" value="Connect" />
           </div>
         </div>
         <div v-show="this.currentTello !== ''" class="row">
@@ -53,7 +57,7 @@
             <label>Connected Tello</label>
           </div>
           <div class="column _75">
-            <span style="margin-left: 0.5rem;">{{currentTello}}</span>
+            <span style="margin-left: 0.5rem;">{{ currentTello }}</span>
           </div>
         </div>
 
@@ -71,7 +75,7 @@
               :value="this.getTheme.dark"
               :style="'background-color:' + this.getTheme.dark"
               v-on:blur="changeTheme($event, '--dark')"
-            >
+            />
           </div>
         </div>
         <div class="row">
@@ -84,7 +88,7 @@
               :value="this.getTheme.mid"
               :style="'background-color:' + this.getTheme.mid"
               v-on:blur="changeTheme($event, '--mid')"
-            >
+            />
           </div>
         </div>
         <div class="row">
@@ -97,7 +101,7 @@
               :value="this.getTheme.light"
               :style="'background-color:' + this.getTheme.light"
               v-on:blur="changeTheme($event, '--light')"
-            >
+            />
           </div>
         </div>
         <div class="row">
@@ -110,7 +114,7 @@
               :value="this.getTheme.primary"
               :style="'background-color:' + this.getTheme.primary"
               v-on:blur="changeTheme($event, '--primary')"
-            >
+            />
           </div>
         </div>
         <div class="row">
@@ -123,7 +127,7 @@
               :value="this.getTheme.secondary"
               :style="'background-color:' + this.getTheme.secondary"
               v-on:blur="changeTheme($event, '--secondary')"
-            >
+            />
           </div>
         </div>
 
@@ -145,15 +149,32 @@
           </div>
           <div class="column _75">
             <span>Copyright (c) 2019 TokenChingy</span>
-            <br>
-            <br>
-            <span>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</span>
-            <br>
-            <br>
-            <span>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</span>
-            <br>
-            <br>
-            <span>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+            <br />
+            <br />
+            <span
+              >Permission is hereby granted, free of charge, to any person obtaining a copy of this
+              software and associated documentation files (the "Software"), to deal in the Software
+              without restriction, including without limitation the rights to use, copy, modify,
+              merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+              permit persons to whom the Software is furnished to do so, subject to the following
+              conditions:</span
+            >
+            <br />
+            <br />
+            <span
+              >The above copyright notice and this permission notice shall be included in all copies
+              or substantial portions of the Software.</span
+            >
+            <br />
+            <br />
+            <span
+              >THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+              INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+              PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+              HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+              CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+              OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span
+            >
           </div>
         </div>
       </div>
@@ -238,8 +259,7 @@ export default {
           }
 
           if (this.currentTello !== "") {
-            if (network.ssid === this.currentTello)
-              isTelloStillConnected = true;
+            if (network.ssid === this.currentTello) isTelloStillConnected = true;
           }
         });
 

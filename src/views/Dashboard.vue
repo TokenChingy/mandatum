@@ -2,15 +2,15 @@
   <div>
     <div class="row">
       <div class="column _25">
-        <telemetry id="telemetry"/>
+        <telemetry id="telemetry" />
       </div>
       <div class="column _75">
-        <workspace id="workspace"/>
+        <workspace id="workspace" />
       </div>
     </div>
     <div class="row">
       <div class="column">
-        <console id="console"/>
+        <console id="console" />
       </div>
     </div>
   </div>

@@ -2,14 +2,14 @@
   <div>
     <div class="row _command">
       <div class="column _prompt">
-        <label>Ryze-Tello:~ {{getUserName}}$</label>
-        <input type="text" autofocus="true" autocomplete="off">
+        <label>Ryze-Tello:~ {{ getUserName }}$</label>
+        <input type="text" autofocus="true" autocomplete="off" />
       </div>
     </div>
     <div class="row _responses">
       <ul>
         <li class="column" v-for="(response, index) in telloResponses" :key="index">
-          <span>[{{response.ts}}] Ryze-Tello: {{response.msg}}</span>
+          <span>[{{ response.ts }}] Ryze-Tello: {{ response.msg }}</span>
         </li>
       </ul>
     </div>
@@ -69,16 +69,9 @@ export default {
 
         let command = constructRCCommand(rc);
 
-        this.telloSocket.send(
-          command[0],
-          0,
-          command[1],
-          8889,
-          "192.168.10.1",
-          error => {
-            if (error) throw error;
-          }
-        );
+        this.telloSocket.send(command[0], 0, command[1], 8889, "192.168.10.1", error => {
+          if (error) throw error;
+        });
       });
 
       window.addEventListener("gc.analog.end", event => {
@@ -99,16 +92,9 @@ export default {
 
         let command = constructRCCommand(rc);
 
-        this.telloSocket.send(
-          command[0],
-          0,
-          command[1],
-          8889,
-          "192.168.10.1",
-          error => {
-            if (error) throw error;
-          }
-        );
+        this.telloSocket.send(command[0], 0, command[1], 8889, "192.168.10.1", error => {
+          if (error) throw error;
+        });
       });
 
       window.addEventListener("gc.button.press", event => {
@@ -129,9 +115,7 @@ export default {
 
             switch (command) {
               case "clear":
-                const responsesElement = document.querySelector(
-                  "._responses ul"
-                );
+                const responsesElement = document.querySelector("._responses ul");
                 while (responsesElement.firstChild) {
                   responsesElement.removeChild(responsesElement.firstChild);
                 }
@@ -139,16 +123,9 @@ export default {
                 this.telloResponses.length = 0;
                 break;
               default:
-                this.telloSocket.send(
-                  command,
-                  0,
-                  command.length,
-                  8889,
-                  "192.168.10.1",
-                  error => {
-                    if (error) throw error;
-                  }
-                );
+                this.telloSocket.send(command, 0, command.length, 8889, "192.168.10.1", error => {
+                  if (error) throw error;
+                });
 
                 break;
             }
@@ -157,13 +134,11 @@ export default {
           }
           break;
         case 38:
-          if (this.history.keyCount < this.history.commands.length)
-            this.history.keyCount += 1;
+          if (this.history.keyCount < this.history.commands.length) this.history.keyCount += 1;
 
           if (
-            typeof this.history.commands[
-              this.history.commands.length - this.history.keyCount
-            ] !== "undefined"
+            typeof this.history.commands[this.history.commands.length - this.history.keyCount] !==
+            "undefined"
           )
             commandPrompt.value = this.history.commands[
               this.history.commands.length - this.history.keyCount
@@ -173,9 +148,8 @@ export default {
           if (this.history.keyCount > 0) this.history.keyCount -= 1;
 
           if (
-            typeof this.history.commands[
-              this.history.commands.length - this.history.keyCount
-            ] !== "undefined"
+            typeof this.history.commands[this.history.commands.length - this.history.keyCount] !==
+            "undefined"
           )
             commandPrompt.value = this.history.commands[
               this.history.commands.length - this.history.keyCount

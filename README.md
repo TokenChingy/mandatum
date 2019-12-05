@@ -1,3 +1,5 @@
+> Known Bug: Does not currently run on Windows.
+
 # Mandatum
 
 A simple Javascript stack that allows you to control the Ryze Tello drone from a desktop interface.
@@ -6,19 +8,10 @@ A simple Javascript stack that allows you to control the Ryze Tello drone from a
 
 - [Mandatum](#mandatum)
   - [Table of Contents](#table-of-contents)
-  - [Todos](#todos)
   - [Introduction](#introduction)
   - [Quick Start](#quick-start)
   - [Commands](#commands)
   - [Licence](#licence)
-
-## Todos
-
-In no particular order:
-
-- Implement controller support.
-- ~~Implement basic settings page.~~
-- Implement Tello state, command, and stream history and export functionality.
 
 ## Introduction
 
