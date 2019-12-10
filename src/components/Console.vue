@@ -17,8 +17,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Dgram from "dgram";
+import { mapGetters } from 'vuex';
+import Dgram from 'dgram';
+import _ from 'lodash';
 
 function constructRCCommand(rc) {
   const command = `rc ${rc[0]} ${rc[1]} ${rc[2]} ${rc[3]}`;
@@ -26,40 +27,41 @@ function constructRCCommand(rc) {
 }
 
 export default {
-  name: "console",
+  name: 'console',
   computed: {
-    ...mapGetters(["getUserName"])
+    ...mapGetters(['getUserName']),
   },
-  data: function() {
+  data() {
     return {
-      telloSocket: Dgram.createSocket("udp4", {
-        reuseAddr: true
+      telloSocket: Dgram.createSocket('udp4', {
+        reuseAddr: true,
       }).bind(8889),
       telloResponses: [],
       history: {
         commands: [],
         commandCount: 0,
-        keyCount: 0
-      }
+        keyCount: 0,
+      },
     };
   },
-  mounted: function() {
-    const commandPrompt = document.querySelector("._command ._prompt input");
+  mounted() {
+    const commandPrompt = document.querySelector('._command ._prompt input');
 
+    // eslint-disable-next-line
     Controller.search();
 
-    window.addEventListener("gc.controller.found", found => {
+    window.addEventListener('gc.controller.found', () => {
       const rc = [0, 0, 0, 0];
 
-      window.addEventListener("gc.analog.hold", event => {
+      window.addEventListener('gc.analog.hold', (event) => {
         const stick = event.detail;
 
         switch (stick.name) {
-          case "LEFT_ANALOG_STICK":
+          case 'LEFT_ANALOG_STICK':
             rc[0] = Math.floor(stick.position.x * 100);
             rc[1] = Math.floor(stick.position.y * 100) * -1;
             break;
-          case "RIGHT_ANALOG_STICK":
+          case 'RIGHT_ANALOG_STICK':
             rc[2] = Math.floor(stick.position.y * 100) * -1;
             rc[3] = Math.floor(stick.position.x * 100);
             break;
@@ -67,22 +69,22 @@ export default {
             break;
         }
 
-        let command = constructRCCommand(rc);
+        const command = constructRCCommand(rc);
 
-        this.telloSocket.send(command[0], 0, command[1], 8889, "192.168.10.1", error => {
+        this.telloSocket.send(command[0], 0, command[1], 8889, '192.168.10.1', (error) => {
           if (error) throw error;
         });
       });
 
-      window.addEventListener("gc.analog.end", event => {
+      window.addEventListener('gc.analog.end', (event) => {
         const stick = event.detail;
 
         switch (stick.name) {
-          case "LEFT_ANALOG_STICK":
+          case 'LEFT_ANALOG_STICK':
             rc[0] = Math.floor(stick.position.x * 100);
             rc[1] = Math.floor(stick.position.y * 100);
             break;
-          case "RIGHT_ANALOG_STICK":
+          case 'RIGHT_ANALOG_STICK':
             rc[2] = Math.floor(stick.position.y * 100);
             rc[3] = Math.floor(stick.position.x * 100);
             break;
@@ -90,32 +92,33 @@ export default {
             break;
         }
 
-        let command = constructRCCommand(rc);
+        const command = constructRCCommand(rc);
 
-        this.telloSocket.send(command[0], 0, command[1], 8889, "192.168.10.1", error => {
+        this.telloSocket.send(command[0], 0, command[1], 8889, '192.168.10.1', (error) => {
           if (error) throw error;
         });
       });
 
-      window.addEventListener("gc.button.press", event => {
+      window.addEventListener('gc.button.press', (event) => {
         const button = event.detail;
         console.log(button);
       });
     });
 
-    commandPrompt.addEventListener("keyup", event => {
+    commandPrompt.addEventListener('keyup', (event) => {
       switch (event.keyCode) {
         case 13:
-          if (commandPrompt.value !== "") {
+          if (commandPrompt.value !== '') {
             const command = _.toLower(commandPrompt.value);
 
-            this.history.commandCount++;
+            this.history.commandCount += 1;
             this.history.keyCount = 0;
             this.history.commands[this.history.commandCount] = command;
 
             switch (command) {
-              case "clear":
-                const responsesElement = document.querySelector("._responses ul");
+              case 'clear':
+                // eslint-disable-next-line
+                const responsesElement = document.querySelector('._responses ul');
                 while (responsesElement.firstChild) {
                   responsesElement.removeChild(responsesElement.firstChild);
                 }
@@ -123,50 +126,52 @@ export default {
                 this.telloResponses.length = 0;
                 break;
               default:
-                this.telloSocket.send(command, 0, command.length, 8889, "192.168.10.1", error => {
+                this.telloSocket.send(command, 0, command.length, 8889, '192.168.10.1', (error) => {
                   if (error) throw error;
                 });
 
                 break;
             }
 
-            commandPrompt.value = "";
+            commandPrompt.value = '';
           }
           break;
         case 38:
           if (this.history.keyCount < this.history.commands.length) this.history.keyCount += 1;
 
           if (
-            typeof this.history.commands[this.history.commands.length - this.history.keyCount] !==
-            "undefined"
-          )
+            typeof this.history.commands[this.history.commands.length - this.history.keyCount]
+            !== 'undefined'
+          ) {
             commandPrompt.value = this.history.commands[
               this.history.commands.length - this.history.keyCount
             ];
+          }
           break;
         case 40:
           if (this.history.keyCount > 0) this.history.keyCount -= 1;
 
           if (
-            typeof this.history.commands[this.history.commands.length - this.history.keyCount] !==
-            "undefined"
-          )
+            typeof this.history.commands[this.history.commands.length - this.history.keyCount]
+            !== 'undefined'
+          ) {
             commandPrompt.value = this.history.commands[
               this.history.commands.length - this.history.keyCount
             ];
+          }
           break;
         default:
           break;
       }
     });
 
-    this.telloSocket.on("message", bytes => {
+    this.telloSocket.on('message', (bytes) => {
       this.telloResponses.unshift({
         ts: new Date().toLocaleTimeString(),
-        msg: bytes.toString()
+        msg: bytes.toString(),
       });
     });
-  }
+  },
 };
 </script>
 

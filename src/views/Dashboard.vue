@@ -17,17 +17,17 @@
 </template>
 
 <script>
-import Console from "@/components/Console.vue";
-import Telemetry from "@/components/Telemetry.vue";
-import Workspace from "@/components/Workspace.vue";
+import Console from '@/components/Console.vue';
+import Telemetry from '@/components/Telemetry.vue';
+import Workspace from '@/components/Workspace.vue';
 
 export default {
-  name: "dashboard",
+  name: 'dashboard',
   components: {
     Console,
     Telemetry,
-    Workspace
-  }
+    Workspace,
+  },
 };
 </script>
 

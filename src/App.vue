@@ -79,7 +79,9 @@
 
 html,
 body {
-  height: 100%;
+  height: 100;
+  overflow-y: hidden;
+  overflow-x: hidden;
   width: 100%;
   margin: 0;
   padding: 0;

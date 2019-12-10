@@ -183,67 +183,67 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { setInterval } from "timers";
-import Dgram from "dgram";
-import Jmuxer from "jmuxer";
-import Wifi from "node-wifi";
-import _ from "lodash";
+import { mapGetters, mapMutations } from 'vuex';
+import { setInterval } from 'timers';
+import Dgram from 'dgram';
+import Jmuxer from 'jmuxer';
+import Wifi from 'node-wifi';
+import _ from 'lodash';
 
 export default {
-  name: "workspace",
+  name: 'workspace',
   computed: {
-    ...mapGetters(["getUserName", "getTheme"])
+    ...mapGetters(['getUserName', 'getTheme']),
   },
   methods: {
-    ...mapMutations(["setUserName", "setTheme"]),
-    changeUserName: function(event) {
+    ...mapMutations(['setUserName', 'setTheme']),
+    changeUserName(event) {
       this.setUserName(event.target.value);
     },
-    changeTheme: function(event, prop) {
-      const colour = event.target.value.replace("#", "");
+    changeTheme(event, prop) {
+      const colour = event.target.value.replace('#', '');
 
-      if (colour !== "" && colour.length === 6) {
-        this.setTheme([colour, prop.replace("--", "")]);
+      if (colour !== '' && colour.length === 6) {
+        this.setTheme([colour, prop.replace('--', '')]);
 
         document.documentElement.style.setProperty(prop, `#${colour}`);
       }
     },
-    connectToTello: function() {
-      const selectedTello = document.querySelector("#tellos").value;
+    connectToTello() {
+      const selectedTello = document.querySelector('#tellos').value;
 
       Wifi.connect(
         {
           ssid: selectedTello,
-          password: ""
+          password: '',
         },
-        error => {
+        (error) => {
           if (error) console.log(error);
           this.currentTello = selectedTello;
-        }
+        },
       );
     },
-    toggleTab: function(tabName) {
+    toggleTab(tabName) {
       this.localState.activeTab = tabName;
-    }
+    },
   },
-  data: function() {
+  data() {
     return {
       localState: {
-        activeTab: "stream"
+        activeTab: 'stream',
       },
-      telloSocket: Dgram.createSocket("udp4", {
-        reuseAddr: true
+      telloSocket: Dgram.createSocket('udp4', {
+        reuseAddr: true,
       }).bind(11111),
       telloStreamChunks: [],
       telloStreamChunkCount: 0,
       telloWifi: [],
-      currentTello: ""
+      currentTello: '',
     };
   },
-  mounted: function() {
+  mounted() {
     Wifi.init({
-      iface: null
+      iface: null,
     });
 
     setInterval(() => {
@@ -253,48 +253,48 @@ export default {
         const telloNetworks = [];
         let isTelloStillConnected = false;
 
-        _.forEach(networks, network => {
-          if (_.includes(network.ssid, "TELLO")) {
+        _.forEach(networks, (network) => {
+          if (_.includes(network.ssid, 'TELLO')) {
             telloNetworks.push(network);
           }
 
-          if (this.currentTello !== "") {
+          if (this.currentTello !== '') {
             if (network.ssid === this.currentTello) isTelloStillConnected = true;
           }
         });
 
         if (telloNetworks.length < 0) {
-          this.currentTello = "";
+          this.currentTello = '';
         }
 
-        if (!isTelloStillConnected) this.currentTello = "";
+        if (!isTelloStillConnected) this.currentTello = '';
 
         this.telloWifi = telloNetworks;
       });
     }, 1000);
 
-    const videoPlayer = document.querySelector("#player");
+    const videoPlayer = document.querySelector('#player');
 
-    videoPlayer.addEventListener("click", event => {
+    videoPlayer.addEventListener('click', (event) => {
       event.preventDefault();
     });
 
-    window.addEventListener("focus", () => {
+    window.addEventListener('focus', () => {
       if (videoPlayer.buffered.length > 0) {
         videoPlayer.currentTime = videoPlayer.buffered.end(0);
       }
     });
 
     const JMX = new Jmuxer({
-      node: "player",
-      mode: "video",
+      node: 'player',
+      mode: 'video',
       fps: 30,
-      flushingTime: 1
+      flushingTime: 1,
     });
 
     const maxChunkSize = 3;
 
-    this.telloSocket.on("message", bytes => {
+    this.telloSocket.on('message', (bytes) => {
       const index = bytes.indexOf(Buffer.from([0, 0, 0, 1]));
 
       if (index > -1 && this.telloStreamChunks.length > 0) {
@@ -303,7 +303,7 @@ export default {
 
         if (this.telloStreamChunkCount === maxChunkSize) {
           JMX.feed({
-            video: Uint8Array.from(Buffer.concat(this.telloStreamChunks))
+            video: Uint8Array.from(Buffer.concat(this.telloStreamChunks)),
           });
 
           this.telloStreamChunks.length = 0;
@@ -315,7 +315,7 @@ export default {
         this.telloStreamChunks.push(bytes);
       }
     });
-  }
+  },
 };
 </script>
 

@@ -16,119 +16,119 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import Dgram from "dgram";
-import _ from "lodash";
+import Dgram from 'dgram';
+import _ from 'lodash';
 
 export default {
-  name: "telemetry",
+  name: 'telemetry',
   methods: {
-    toStartCase: function(text) {
+    toStartCase(text) {
       return _.startCase(text);
-    }
+    },
   },
-  data: function() {
+  data() {
     return {
-      telloSocket: Dgram.createSocket("udp4", {
-        reuseAddr: true
+      telloSocket: Dgram.createSocket('udp4', {
+        reuseAddr: true,
       }).bind(8890),
       telloState: {
         pitch: {
-          humanName: "pitch",
+          humanName: 'pitch',
           value: null,
-          unit: "deg"
+          unit: 'deg',
         },
         roll: {
-          humanName: "roll",
+          humanName: 'roll',
           value: null,
-          unit: "deg"
+          unit: 'deg',
         },
         yaw: {
-          humanName: "yaw",
+          humanName: 'yaw',
           value: null,
-          unit: "deg"
+          unit: 'deg',
         },
         vgx: {
-          humanName: "x axis speed",
+          humanName: 'x axis speed',
           value: null,
-          unit: "cm/s"
+          unit: 'cm/s',
         },
         vgy: {
-          humanName: "y axis speed",
+          humanName: 'y axis speed',
           value: null,
-          unit: "cm/s"
+          unit: 'cm/s',
         },
         vgz: {
-          humanName: "z axis speed",
+          humanName: 'z axis speed',
           value: null,
-          unit: "cm/s"
+          unit: 'cm/s',
         },
         templ: {
-          humanName: "lowest temperature",
+          humanName: 'lowest temperature',
           value: null,
-          unit: "°C"
+          unit: '°C',
         },
         temph: {
-          humanName: "highest temperature",
+          humanName: 'highest temperature',
           value: null,
-          unit: "°C"
+          unit: '°C',
         },
         tof: {
-          humanName: "time of flight distance",
+          humanName: 'time of flight distance',
           value: null,
-          unit: "cm"
+          unit: 'cm',
         },
         h: {
-          humanName: "height",
+          humanName: 'height',
           value: null,
-          unit: "cm"
+          unit: 'cm',
         },
         bat: {
-          humanName: "battery",
+          humanName: 'battery',
           value: null,
-          unit: "%"
+          unit: '%',
         },
         baro: {
-          humanName: "barometer",
+          humanName: 'barometer',
           value: null,
-          unit: "cm"
+          unit: 'cm',
         },
         time: {
-          humanName: "motor run time",
+          humanName: 'motor run time',
           value: null,
-          unit: "s"
+          unit: 's',
         },
         agx: {
-          humanName: "x axis acceleration",
+          humanName: 'x axis acceleration',
           value: null,
-          unit: "cm/s"
+          unit: 'cm/s',
         },
         agy: {
-          humanName: "y axis acceleration",
+          humanName: 'y axis acceleration',
           value: null,
-          unit: "cm/s"
+          unit: 'cm/s',
         },
         agz: {
-          humanName: "z axis acceleration",
+          humanName: 'z axis acceleration',
           value: null,
-          unit: "cm/s"
-        }
-      }
+          unit: 'cm/s',
+        },
+      },
     };
   },
-  mounted: function() {
-    this.telloSocket.on("message", bytes => {
-      const telloStateArray = bytes.toString().split(";");
+  mounted() {
+    this.telloSocket.on('message', (bytes) => {
+      const telloStateArray = bytes.toString().split(';');
 
-      for (let i = 0; i < telloStateArray.length; i++) {
-        let keyValuePair = telloStateArray[i].split(":");
+      for (let i = 0; i < telloStateArray.length; i += 1) {
+        const keyValuePair = telloStateArray[i].split(':');
 
         if (this.telloState[keyValuePair[0]]) {
+          // eslint-disable-next-line
           this.telloState[keyValuePair[0]].value = keyValuePair[1];
         }
       }
     });
-  }
+  },
 };
 </script>
 
